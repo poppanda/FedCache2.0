@@ -1,0 +1,54 @@
+resume: False
+
+random_seed: 42
+
+# global options
+model_group: resnets
+use_cuda: True
+num_clients: 100
+seed: 42 # sacred handles automatic seeding when passed in the config
+batch_size: 64
+model_types: ["resnet_l"]
+dataset:
+  alpha: 0.5
+  image_size: 32
+  image_channels: 3
+  resize_extend: 8
+  full_img_size: (32, 32, 3)
+  name: "CIFAR10" # STL10
+  dir: "~/Code/data"
+  num_classes: 10
+  data_per_client: 2500
+  num_workers: 4
+  tau: 0.5
+
+save_dir:
+  client: "~/Code/fco-torch/save/resnet_l_only/clients"
+  proto_data: "~/Code/fco-torch/save/resnet_l_only/data"
+
+# train options
+scheduler_type: "one_cycle" # or "plateau"
+train_phases: 8
+# frepo_phases: 192
+fed_phases: 12
+epoch_per_phase: 10
+test_epoch: 800
+local_epochs: 3
+
+# client train options
+lr: 0.01
+client_loss: "cross_entropy"
+optimizer: "adam" # or LARS (experimental)
+weight_decay: 1.0e-6 # "optimized usxling LARS [...] and weight decay of 10−6"
+device: "cuda"
+
+# test options
+mini_test_proportion: 0.1
+mini_test_iterations: 10
+test_batch_size: 512
+test_num_workers: 16
+
+# dataset distillation settings
+dd:
+  epoch_per_phase: 10
+  num_prototypes_per_class: 1
